@@ -7,9 +7,9 @@ class ball{
 		float y;
 		int width;
 		int height;
-		int forceX;
-		int forceY;
-		int speed;
+		float forceX;
+		float forceY;
+		float speed;
 
 		ball();
 		void start();

@@ -4,6 +4,7 @@
 ai::ai(){
 	height = 100;
 	width = 10;
+	speed = 3;
 	y = (game::height/2)-height/2;
 };
 
@@ -20,8 +21,8 @@ sf::Vector2f ai::getPosition(){
 void ai::move(sf::RectangleShape target){
 	sf::FloatRect targetBox = target.getGlobalBounds();
 	if(y+height/2 > targetBox.top){
-		y-= 3;
+		y-= speed;
 	}else if(y+height/2 < targetBox.top){
-		y+= 3;
+		y+= speed;
 	}
 }

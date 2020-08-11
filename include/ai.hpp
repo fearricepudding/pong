@@ -7,6 +7,7 @@ class ai{
 
 		float x;
 		float y;
+		float speed;
 		float boundLeft;
 		float boundRight;
 		float boundTop;
