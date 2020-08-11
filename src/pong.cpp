@@ -42,10 +42,15 @@ int main(){
 	if (!font.loadFromFile("./roboto.ttf")){
 	    std::cout << "font not found!" << std::endl;
 	};
-	sf::Text text;
-	text.setFont(font);
-	text.setCharacterSize(18);
-	text.setFillColor(sf::Color::White);
+	sf::Text scoreText;
+	scoreText.setFont(font);
+	scoreText.setCharacterSize(18);
+	scoreText.setFillColor(sf::Color::White);
+	sf::Text livesText;
+	livesText.setFont(font);
+	livesText.setCharacterSize(18);
+	livesText.setFillColor(sf::Color::White);
+
 	const sf::Time TimePerFrame = sf::seconds(1.f/60.f);
 	sf::Clock clock;
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
@@ -62,9 +67,12 @@ int main(){
 		if(elapsedTime.count() > 1){
 			averageFrames = totalFrames / elapsedTime.count();
 		};
-		std::stringstream fpsCounterText;
-		fpsCounterText << "Lives: " << game::lives << " | Score: " << game::score << " | Ball Speed: " << target.forceX << " | Bot: " << bot.speed;
-		text.setString(fpsCounterText.str());
+		std::stringstream lives;
+		std::stringstream score;
+		lives << "Lives: " << game::lives;
+		score << "Score: " << game::score;
+		livesText.setString(lives.str());
+		scoreText.setString(score.str());
 		sf::Event event;
 		while (window.pollEvent(event)){
 			if (event.type == sf::Event::Closed)
@@ -126,9 +134,14 @@ int main(){
 			ball.setPosition(target.getPosition());
 			oponent.setPosition(bot.getPosition());
 	    };
+		sf::FloatRect livesTextBox = livesText.getGlobalBounds();
+		sf::FloatRect scoreTextBox = scoreText.getGlobalBounds();
+		livesText.setPosition((game::width - livesTextBox.width)/2, 0);
+		scoreText.setPosition((game::width - scoreTextBox.width)/2, 20);
 
 		window.clear();
-		window.draw(text);
+		window.draw(livesText);
+		window.draw(scoreText);
 	    window.draw(bat);
 		window.draw(oponent);
 		window.draw(ball);

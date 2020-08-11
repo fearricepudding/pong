@@ -16,8 +16,8 @@ ball::ball(){
 void ball::start(){
 	if(!moving){
 		moving = true;
-		forceX = 3;
-		forceY = 3;
+		forceX = 1 + (rand() % 5);
+		forceY = 1 + (rand() % 5);
 	};
 };
 
