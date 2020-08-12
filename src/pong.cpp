@@ -15,6 +15,7 @@ int game::width = 800;
 int game::lives = 3;
 bool game::reset = false;
 int game::score = 0;
+bool game::over = false; 
 
 int main(){
     sf::RenderWindow window(sf::VideoMode(game::width, game::height), "Pong");
@@ -43,13 +44,17 @@ int main(){
 	    std::cout << "font not found!" << std::endl;
 	};
 	sf::Text scoreText;
+	sf::Text livesText;
+	sf::Text gameOverText;
 	scoreText.setFont(font);
 	scoreText.setCharacterSize(18);
 	scoreText.setFillColor(sf::Color::White);
-	sf::Text livesText;
 	livesText.setFont(font);
 	livesText.setCharacterSize(18);
 	livesText.setFillColor(sf::Color::White);
+	gameOverText.setFont(font);
+	gameOverText.setCharacterSize(25);
+	gameOverText.setFillColor(sf::Color::White);
 
 	const sf::Time TimePerFrame = sf::seconds(1.f/60.f);
 	sf::Clock clock;
@@ -69,10 +74,13 @@ int main(){
 		};
 		std::stringstream lives;
 		std::stringstream score;
+		std::stringstream gameover;
 		lives << "Lives: " << game::lives;
 		score << "Score: " << game::score;
+		gameover << "Game Over!\nScore: "<< game::score;
 		livesText.setString(lives.str());
 		scoreText.setString(score.str());
+		gameOverText.setString(gameover.str());
 		sf::Event event;
 		while (window.pollEvent(event)){
 			if (event.type == sf::Event::Closed)
@@ -86,8 +94,15 @@ int main(){
 			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::W))
 				user.down = false;
 			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Space))
-				target.start();
-		}
+				if(!game::over){
+					target.start();
+				}else{
+					game::over = false;
+					game::reset = true;
+					game::score = 0; 
+					game::lives = 3;
+				}
+		};
 		sf::Time ClockelapsedTime = clock.restart();
 		timeSinceLastUpdate += ClockelapsedTime;
 		while (timeSinceLastUpdate > TimePerFrame){
@@ -98,6 +113,10 @@ int main(){
 				bot.speed = bot.speed + .1;
 				game::reset = false;
 			};
+			if(game::lives <= 0){
+				target.moving = false;
+				game::over = true;
+			}
 	        timeSinceLastUpdate -= TimePerFrame;
 			if(user.up){
 				user.y += 3;
@@ -136,15 +155,21 @@ int main(){
 	    };
 		sf::FloatRect livesTextBox = livesText.getGlobalBounds();
 		sf::FloatRect scoreTextBox = scoreText.getGlobalBounds();
+		sf::FloatRect gameOverBox = gameOverText.getGlobalBounds();
 		livesText.setPosition((game::width - livesTextBox.width)/2, 0);
 		scoreText.setPosition((game::width - scoreTextBox.width)/2, 20);
+		gameOverText.setPosition((game::width - gameOverBox.width)/2, (game::height - gameOverBox.height)/2);
 
 		window.clear();
-		window.draw(livesText);
-		window.draw(scoreText);
-	    window.draw(bat);
-		window.draw(oponent);
-		window.draw(ball);
+		if(game::over){
+			window.draw(gameOverText);	
+		}else{
+			window.draw(livesText);
+			window.draw(scoreText);
+			window.draw(bat);
+			window.draw(oponent);
+			window.draw(ball);
+		};
 		window.display();
 	};
 	return 0;

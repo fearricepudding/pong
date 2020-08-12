@@ -5,6 +5,7 @@ class game{
 		static int lives;
 		static int score;
 		static bool reset;
+		static bool over;
 		
 	private:
 		game();
